@@ -757,6 +757,18 @@ const RelationModalWithContext = ({
   const handleSearch = async (search: string) => {
     setSearchParams((s) => ({ ...s, _q: search, page: 1 }));
   };
+
+  const handleSelect = (relationId?: string) => {
+    handleChange(relationId);
+
+    /**
+     * Picking an entry ends the search. The combobox still shows the picked label, which must not
+     * be sent back as a search when the dropdown is reopened, otherwise only the picked entry
+     * (now connected and therefore omitted) is searched and the remaining entries never show.
+     */
+    setTextValue('');
+    setSearchParams((s) => ({ ...s, _q: '', page: 1 }));
+  };
   return (
     <RelationModalRenderer>
       {({ dispatch }) => (
@@ -812,7 +824,7 @@ const RelationModalWithContext = ({
           })}
           onLoadMore={handleLoadMore}
           textValue={textValue}
-          onChange={handleChange}
+          onChange={handleSelect}
           onTextValueChange={(text) => {
             setTextValue(text);
           }}
